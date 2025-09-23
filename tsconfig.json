@@ -22,6 +22,6 @@
       "@/*": ["./*"]
     }
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "app/api/reviews/hostaway/route.js", "app/components/Dashboard.js", "app/components/Filters.js", "app/components/ReviewCard.js", "app/property/[id]/page.js"],
   "exclude": ["node_modules"]
 }
