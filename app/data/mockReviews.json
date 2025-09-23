@@ -1,0 +1,274 @@
+{
+    "status": "success",
+    "result": [
+      {
+        "id": 7453,
+        "type": "host-to-guest",
+        "status": "published",
+        "rating": null,
+        "publicReview": "Shane and family are wonderful! Would definitely host again :)",
+        "reviewCategory": [
+          {
+            "category": "cleanliness",
+            "rating": 10
+          },
+          {
+            "category": "communication",
+            "rating": 10
+          },
+          {
+            "category": "respect_house_rules",
+            "rating": 10
+          }
+        ],
+        "submittedAt": "2020-08-21 22:45:14",
+        "guestName": "Shane Finkelstein",
+        "listingName": "2B N1 A - 29 Shoreditch Heights",
+        "channel": "Airbnb"
+      },
+      {
+        "id": 7454,
+        "type": "guest-to-host",
+        "status": "published",
+        "rating": 5,
+        "publicReview": "Amazing stay! The apartment was spotless and in a great location. Would definitely book again!",
+        "reviewCategory": [
+          {
+            "category": "cleanliness",
+            "rating": 10
+          },
+          {
+            "category": "accuracy",
+            "rating": 9
+          },
+          {
+            "category": "check_in",
+            "rating": 10
+          },
+          {
+            "category": "location",
+            "rating": 10
+          },
+          {
+            "category": "value",
+            "rating": 9
+          }
+        ],
+        "submittedAt": "2023-10-15 14:30:00",
+        "guestName": "Emma Thompson",
+        "listingName": "1B Studio - Canary Wharf Tower",
+        "channel": "Booking.com"
+      },
+      {
+        "id": 7455,
+        "type": "guest-to-host",
+        "status": "published",
+        "rating": 4,
+        "publicReview": "Good location and clean. Minor issues with WiFi but host was responsive.",
+        "reviewCategory": [
+          {
+            "category": "cleanliness",
+            "rating": 9
+          },
+          {
+            "category": "accuracy",
+            "rating": 8
+          },
+          {
+            "category": "check_in",
+            "rating": 9
+          },
+          {
+            "category": "location",
+            "rating": 10
+          },
+          {
+            "category": "communication",
+            "rating": 9
+          }
+        ],
+        "submittedAt": "2023-11-02 09:15:00",
+        "guestName": "John Smith",
+        "listingName": "2B N1 A - 29 Shoreditch Heights",
+        "channel": "Airbnb"
+      },
+      {
+        "id": 7456,
+        "type": "guest-to-host",
+        "status": "published",
+        "rating": 5,
+        "publicReview": "Exceptional experience! The flat exceeded our expectations in every way.",
+        "reviewCategory": [
+          {
+            "category": "cleanliness",
+            "rating": 10
+          },
+          {
+            "category": "accuracy",
+            "rating": 10
+          },
+          {
+            "category": "location",
+            "rating": 10
+          }
+        ],
+        "submittedAt": "2023-11-20 18:45:00",
+        "guestName": "Sarah Johnson",
+        "listingName": "3B Penthouse - London Bridge",
+        "channel": "VRBO"
+      },
+      {
+        "id": 7457,
+        "type": "host-to-guest",
+        "status": "published",
+        "rating": null,
+        "publicReview": "Lovely guests who treated our property with care. Welcome back anytime!",
+        "reviewCategory": [
+          {
+            "category": "cleanliness",
+            "rating": 9
+          },
+          {
+            "category": "communication",
+            "rating": 10
+          },
+          {
+            "category": "respect_house_rules",
+            "rating": 10
+          }
+        ],
+        "submittedAt": "2023-11-25 20:00:00",
+        "guestName": "Michael Brown",
+        "listingName": "1B Studio - Canary Wharf Tower",
+        "channel": "Airbnb"
+      },
+      {
+        "id": 7458,
+        "type": "guest-to-host",
+        "status": "published",
+        "rating": 2,
+        "publicReview": "Very disappointed. The apartment was not clean, found hair in the bathroom and dust everywhere. Photos were misleading - the space is much smaller than advertised. No response from host when we complained.",
+        "reviewCategory": [
+          {
+            "category": "cleanliness",
+            "rating": 3
+          },
+          {
+            "category": "accuracy",
+            "rating": 2
+          },
+          {
+            "category": "check_in",
+            "rating": 5
+          },
+          {
+            "category": "communication",
+            "rating": 1
+          },
+          {
+            "category": "value",
+            "rating": 3
+          }
+        ],
+        "submittedAt": "2023-12-05 11:20:00",
+        "guestName": "Rachel Martinez",
+        "listingName": "2B N1 A - 29 Shoreditch Heights",
+        "channel": "Airbnb"
+      },
+      {
+        "id": 7459,
+        "type": "guest-to-host",
+        "status": "published",
+        "rating": 1,
+        "publicReview": "Terrible experience! Heating didn't work during winter stay, mold in bathroom, and the bed was broken. Host refused to address issues or offer refund. Would not recommend.",
+        "reviewCategory": [
+          {
+            "category": "cleanliness",
+            "rating": 2
+          },
+          {
+            "category": "accuracy",
+            "rating": 4
+          },
+          {
+            "category": "check_in",
+            "rating": 6
+          },
+          {
+            "category": "location",
+            "rating": 7
+          },
+          {
+            "category": "communication",
+            "rating": 1
+          },
+          {
+            "category": "value",
+            "rating": 1
+          }
+        ],
+        "submittedAt": "2023-12-18 16:45:00",
+        "guestName": "David Chen",
+        "listingName": "1B Studio - Canary Wharf Tower",
+        "channel": "Booking.com"
+      },
+      {
+        "id": 7460,
+        "type": "host-to-guest",
+        "status": "published",
+        "rating": null,
+        "publicReview": "Guest left the apartment in poor condition. Broke house rules by smoking indoors and having unauthorized guests. Required extra cleaning fees.",
+        "reviewCategory": [
+          {
+            "category": "cleanliness",
+            "rating": 2
+          },
+          {
+            "category": "communication",
+            "rating": 4
+          },
+          {
+            "category": "respect_house_rules",
+            "rating": 1
+          }
+        ],
+        "submittedAt": "2024-01-03 10:30:00",
+        "guestName": "Thomas Wilson",
+        "listingName": "3B Penthouse - London Bridge",
+        "channel": "VRBO"
+      },
+      {
+        "id": 7461,
+        "type": "guest-to-host",
+        "status": "published",
+        "rating": 2,
+        "publicReview": "Location was the only positive. Apartment had numerous issues - broken dishwasher, stained carpets, and uncomfortable beds. Not worth the high price.",
+        "reviewCategory": [
+          {
+            "category": "cleanliness",
+            "rating": 4
+          },
+          {
+            "category": "accuracy",
+            "rating": 5
+          },
+          {
+            "category": "check_in",
+            "rating": 6
+          },
+          {
+            "category": "location",
+            "rating": 8
+          },
+          {
+            "category": "value",
+            "rating": 2
+          }
+        ],
+        "submittedAt": "2024-01-15 19:00:00",
+        "guestName": "Lisa Anderson",
+        "listingName": "2B N1 A - 29 Shoreditch Heights",
+        "channel": "Airbnb"
+      }
+    ]
+  }
