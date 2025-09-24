@@ -1,0 +1,41 @@
+[
+    {
+      "id": 1,
+      "name": "Luxury Riverside Apartment",
+      "tagline": "Stunning views of the city skyline",
+      "heroImage": "/placeholder.svg?height=800&width=1200",
+      "price": 220,
+      "guests": 4,
+      "rating": 9.2,
+      "type": "Apartment",
+      "location": "London, United Kingdom",
+      "description": "A beautifully designed apartment with floor-to-ceiling windows offering breathtaking views of the river and city. Perfect for families and business travelers alike.",
+      "amenities": [
+        "Free Wi-Fi",
+        "Smart TV",
+        "Fully equipped kitchen",
+        "Washer/Dryer",
+        "Air conditioning",
+        "24/7 support"
+      ]
+    },
+    {
+      "id": 2,
+      "name": "Modern City Center Studio",
+      "tagline": "Perfect for short stays and business trips",
+      "heroImage": "/placeholder.svg?height=800&width=1200",
+      "price": 150,
+      "guests": 2,
+      "rating": 8.5,
+      "type": "Studio",
+      "location": "Manchester, United Kingdom",
+      "description": "A compact yet comfortable studio located in the heart of the city. Close to major transport links and business districts.",
+      "amenities": [
+        "Free Wi-Fi",
+        "Work desk",
+        "Smart TV",
+        "Kitchenette",
+        "Heating"
+      ]
+    }
+  ]
