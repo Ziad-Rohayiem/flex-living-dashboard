@@ -1,9 +1,11 @@
 // app/components/Dashboard.jsx
 'use client'
-
+import React from 'react'
 import { useState, useEffect } from 'react'
 import { Calendar, Star, Filter, TrendingUp, Home, AlertCircle, ChevronDown, Search } from 'lucide-react'
 import { useRouter } from 'next/navigation'
+import ReviewCard from './ReviewCard'
+import { generatePropertyId, getPropertyFromReviews } from '@/app/utils/propertyHelpers'
 
 export default function Dashboard() {
   const [reviews, setReviews] = useState([])
@@ -18,6 +20,11 @@ export default function Dashboard() {
   const [channelFilter, setChannelFilter] = useState('all')
   const [dateFilter, setDateFilter] = useState('all')
   const [sortBy, setSortBy] = useState('date-desc')
+
+  // state for property grouping
+  const [groupByProperty, setGroupByProperty] = useState(false)
+  // const [properties, setProperties] = useState([])
+  // const [propertyMap, setPropertyMap] = useState({})
 
   // Search and expand states
   const [propertySearch, setPropertySearch] = useState('')
@@ -160,8 +167,27 @@ export default function Dashboard() {
 
   const handleDisplaySelected = () => {
     const selectedReviewsData = reviews.filter(r => selectedReviews.includes(r.id))
-    localStorage.setItem('selectedReviews', JSON.stringify(selectedReviewsData))
-    router.push('/property/1')
+    
+    if (selectedReviewsData.length === 0) return
+    
+    // Group selected reviews by property
+    const propertyGroups = getPropertyFromReviews(selectedReviewsData)
+    const propertyIds = Object.keys(propertyGroups)
+    
+    if (propertyIds.length === 1) {
+      // Single property - direct redirect
+      localStorage.setItem('selectedReviews', JSON.stringify(selectedReviewsData))
+      router.push(`/property/${propertyIds[0]}`)
+    } else {
+      // Multiple properties - store all and redirect to first
+      localStorage.setItem('selectedReviews', JSON.stringify(selectedReviewsData))
+      localStorage.setItem('multiPropertySelection', JSON.stringify(propertyIds))
+      
+      const firstProperty = propertyGroups[propertyIds[0]]
+      if (confirm(`You've selected reviews from ${propertyIds.length} properties. View "${firstProperty.name}" first?`)) {
+        router.push(`/property/${propertyIds[0]}`)
+      }
+    }
   }
 
   const properties = [...new Set(reviews.map(r => r.listingName))]
@@ -425,8 +451,14 @@ export default function Dashboard() {
 
         {/* Reviews Table */}
         <div className="bg-white rounded-lg shadow-md overflow-hidden border border-gray-100">
-          <div className="px-6 py-4 border-b bg-gray-50">
+          <div className="px-6 py-4 border-b bg-gray-50 flex justify-between items-center">
             <h2 className="text-xl font-semibold text-gray-900">Reviews ({filteredReviews.length})</h2>
+            <button
+              onClick={() => setGroupByProperty(!groupByProperty)}
+              className="text-sm text-teal-600 hover:text-teal-700 font-medium"
+            >
+              {groupByProperty ? '📋 List View' : '🏠 Group by Property'}
+            </button>
           </div>
           <div className="overflow-x-auto">
             <table className="w-full">
@@ -442,60 +474,53 @@ export default function Dashboard() {
                   <th className="px-6 py-3 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">Review</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-gray-200 bg-white">
+
+                <tbody className="divide-y divide-gray-200 bg-white">
                 {filteredReviews.length > 0 ? (
-                  filteredReviews.map((review) => (
-                    <tr key={review.id} className="hover:bg-gray-50 transition-colors">
-                      <td className="px-6 py-4 whitespace-nowrap">
-                        <input
-                          type="checkbox"
-                          checked={selectedReviews.includes(review.id)}
-                          onChange={() => toggleReviewSelection(review.id)}
-                          className="rounded text-teal-600 focus:ring-teal-500 w-4 h-4"
-                        />
-                      </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 font-medium">
-                        {review.guestName}
-                      </td>
-                      <td className="px-6 py-4 text-sm text-gray-700">
-                        <div className="max-w-xs truncate" title={review.listingName}>
-                          {review.listingName}
-                        </div>
-                      </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm">
-                        <div className="flex items-center">
-                          {review.rating ? (
-                            <>
-                              <Star className="w-4 h-4 text-yellow-500 fill-current mr-1" />
-                              <span className="text-gray-900 font-semibold">{review.rating}</span>
-                            </>
-                          ) : (
-                            <span className="text-gray-400">N/A</span>
-                          )}
-                        </div>
-                      </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">
-                        {new Date(review.submittedAt).toLocaleDateString()}
-                      </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">
-                        {review.channel}
-                      </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm">
-                        <span className={`px-3 py-1 text-xs font-medium rounded-full ${
-                          review.type === 'guest-to-host' 
-                            ? 'bg-blue-100 text-blue-800' 
-                            : 'bg-green-100 text-green-800'
-                        }`}>
-                          {review.type}
-                        </span>
-                      </td>
-                      <td className="px-6 py-4 text-sm text-gray-700">
-                        <div className="max-w-xs truncate" title={review.publicReview}>
-                          {review.publicReview}
-                        </div>
-                      </td>
-                    </tr>
-                  ))
+                  groupByProperty ? (
+                    // Grouped view
+                    Object.entries(
+                      filteredReviews.reduce((acc, review) => {
+                        if (!acc[review.listingName]) acc[review.listingName] = []
+                        acc[review.listingName].push(review)
+                        return acc
+                      }, {})
+                    ).map(([propertyName, propertyReviews]) => (
+                      <React.Fragment key={propertyName}>
+                        <tr className="bg-gray-50">
+                          <td colSpan="8" className="px-6 py-3 text-sm font-semibold text-gray-900">
+                            <div className="flex items-center">
+                              <Home className="w-4 h-4 mr-2 text-teal-600" />
+                              {propertyName}
+                              <span className="ml-2 text-xs text-gray-500">({propertyReviews.length} reviews)</span>
+                            </div>
+                          </td>
+                        </tr>
+                        {propertyReviews.map(review => (
+                          <ReviewCard
+                            key={review.id}
+                            review={review}
+                            variant="table"
+                            showCheckbox={true}
+                            isSelected={selectedReviews.includes(review.id)}
+                            onSelect={toggleReviewSelection}
+                          />
+                        ))}
+                      </React.Fragment>
+                    ))
+                  ) : (
+                    // Regular view
+                    filteredReviews.map((review) => (
+                      <ReviewCard
+                        key={review.id}
+                        review={review}
+                        variant="table"
+                        showCheckbox={true}
+                        isSelected={selectedReviews.includes(review.id)}
+                        onSelect={toggleReviewSelection}
+                      />
+                    ))
+                  )
                 ) : (
                   <tr>
                     <td colSpan="8" className="px-6 py-12 text-center text-gray-500">
@@ -513,11 +538,14 @@ export default function Dashboard() {
           <div className="text-sm text-gray-500">
             {selectedReviews.length > 0 && (
               <button
-                onClick={() => setSelectedReviews([])}
-                className="text-teal-600 hover:text-teal-700 underline"
-              >
-                Clear selection
-              </button>
+              onClick={() => {
+                setSelectedReviews([])
+                localStorage.removeItem('multiPropertySelection')
+              }}
+              className="text-teal-600 hover:text-teal-700 underline"
+            >
+              Clear selection
+            </button>
             )}
           </div>
           <button 

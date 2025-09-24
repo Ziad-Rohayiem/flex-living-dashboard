@@ -2,10 +2,12 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { Star, Calendar, User, MapPin, Check, ChevronRight } from 'lucide-react'
+import { Star, Calendar, User, MapPin, Check, ChevronRight, AlertCircle } from 'lucide-react'
 import Link from 'next/link'
 import Image from 'next/image'
 import { useParams } from 'next/navigation'
+import ReviewCard from '@/app/components/ReviewCard'
+import { generatePropertyId } from '@/app/utils/propertyHelpers'
 
 // Mock property data (replace with real API if needed)
 import mockProperties from '@/app/data/mockProperties.json'
@@ -19,18 +21,80 @@ export default function PropertyPage() {
   const [property, setProperty] = useState(null)
   const [selectedReviews, setSelectedReviews] = useState([])
 
+  // state for multi-property navigation
+  const [otherPropertyIds, setOtherPropertyIds] = useState([])
+
   // Load property data based on the ID
   useEffect(() => {
     if (propertyId) {
+      // Try to find by ID first, then generate a mock property
       const found = mockProperties.find(p => p.id === Number(propertyId))
-      if (found) setProperty(found)
+      if (found) {
+        setProperty(found)
+      } else {
+        // Create a property object for reviews without mock data
+        const storedReviews = localStorage.getItem('selectedReviews')
+        if (storedReviews) {
+          const reviews = JSON.parse(storedReviews)
+          const propertyReview = reviews.find(r => generatePropertyId(r.listingName) == propertyId)
+          if (propertyReview) {
+            setProperty({
+              id: propertyId,
+              name: propertyReview.listingName,
+              tagline: "Premium Flex Living Property",
+              price: 200,
+              guests: 4,
+              rating: 9.0,
+              type: "Apartment",
+              location: "London, United Kingdom",
+              description: "A premium Flex Living property offering exceptional comfort and service.",
+              amenities: ["Free Wi-Fi", "Smart TV", "Fully equipped kitchen", "24/7 support"]
+            })
+          }
+        }
+      }
     }
   }, [propertyId])
 
   // Load the reviews that were selected in the dashboard
   useEffect(() => {
     const stored = localStorage.getItem('selectedReviews')
-    if (stored) setSelectedReviews(JSON.parse(stored))
+    if (stored) {
+      const allReviews = JSON.parse(stored)
+      
+      // Filter reviews for this property AND only show guest-to-host reviews
+      const thisPropertyReviews = allReviews.filter(review => 
+        generatePropertyId(review.listingName) == propertyId && 
+        review.type === 'guest-to-host'
+      )
+
+      setSelectedReviews(thisPropertyReviews)
+      
+      // Check for multi-property selection
+      const multiProperty = localStorage.getItem('multiPropertySelection')
+      if (multiProperty) {
+        const allPropertyIds = JSON.parse(multiProperty)
+        // Only show multi-property navigation if there are actually multiple properties
+        const actualPropertyIds = [...new Set(allReviews.map(r => generatePropertyId(r.listingName).toString()))]
+        if (actualPropertyIds.length > 1) {
+          setOtherPropertyIds(allPropertyIds.filter(id => id != propertyId))
+        } else {
+          // Clear the multi-property flag if there's only one property
+          localStorage.removeItem('multiPropertySelection')
+          setOtherPropertyIds([])
+        }
+      }
+    }
+  }, [propertyId])
+
+  useEffect(() => {
+    // Cleanup on unmount
+    return () => {
+      // Only clear if navigating away from property pages
+      if (!window.location.pathname.includes('/property/')) {
+        localStorage.removeItem('multiPropertySelection')
+      }
+    }
   }, [])
 
   // Helper to render star rating (0-5)
@@ -157,7 +221,9 @@ export default function PropertyPage() {
           <div className="flex items-center justify-between mb-6">
             <h3 className="text-xl font-bold text-gray-900">Guest Reviews</h3>
             <div className="flex items-center">
-              <span className="text-sm text-gray-500 mr-2">Showing {selectedReviews.length} selected reviews</span>
+              <span className="text-sm text-gray-500 mr-2">
+                Showing {selectedReviews.length} guest review{selectedReviews.length !== 1 ? 's' : ''}
+              </span>
             </div>
           </div>
 
@@ -166,47 +232,85 @@ export default function PropertyPage() {
               <p className="text-gray-500">No reviews selected. Please go back to the dashboard and select reviews to display.</p>
             </div>
           ) : (
+            // <div className="space-y-6">
+            //   {selectedReviews.map((review) => (
+            //     <div key={review.id} className="border-b border-gray-200 pb-6 last:border-0">
+            //       <div className="flex items-start justify-between mb-4">
+            //         <div>
+            //           <div className="flex items-center mb-2">
+            //             <User className="w-5 h-5 text-gray-400 mr-2" />
+            //             <h4 className="font-semibold text-gray-900">{review.guestName}</h4>
+            //           </div>
+            //           <div className="flex items-center text-sm text-gray-500">
+            //             <Calendar className="w-4 h-4 mr-1" />
+            //             {new Date(review.submittedAt).toLocaleDateString()}
+            //           </div>
+            //         </div>
+            //         {review.rating && (
+            //           <div className="flex items-center bg-teal-50 px-3 py-1 rounded-full">
+            //             <Star className="w-4 h-4 text-yellow-500 fill-current mr-1" />
+            //             <span className="font-semibold text-teal-900">{review.rating}/10</span>
+            //           </div>
+            //         )}
+            //       </div>
+
+            //       <p className="text-gray-700 leading-relaxed">{review.publicReview}</p>
+
+            //       {review.categories && review.categories.length > 0 && (
+            //         <div className="mt-4 flex flex-wrap gap-2">
+            //           {review.categories.map((cat, idx) => (
+            //             <span
+            //               key={idx}
+            //               className="text-xs bg-gray-100 text-gray-700 px-3 py-1 rounded-full"
+            //             >
+            //               {cat.category.replace(/_/g, ' ')}: {cat.rating}/10
+            //             </span>
+            //           ))}
+            //         </div>
+            //       )}
+            //     </div>
+            //   ))}
+            // </div>
             <div className="space-y-6">
               {selectedReviews.map((review) => (
-                <div key={review.id} className="border-b border-gray-200 pb-6 last:border-0">
-                  <div className="flex items-start justify-between mb-4">
-                    <div>
-                      <div className="flex items-center mb-2">
-                        <User className="w-5 h-5 text-gray-400 mr-2" />
-                        <h4 className="font-semibold text-gray-900">{review.guestName}</h4>
-                      </div>
-                      <div className="flex items-center text-sm text-gray-500">
-                        <Calendar className="w-4 h-4 mr-1" />
-                        {new Date(review.submittedAt).toLocaleDateString()}
-                      </div>
-                    </div>
-                    {review.rating && (
-                      <div className="flex items-center bg-teal-50 px-3 py-1 rounded-full">
-                        <Star className="w-4 h-4 text-yellow-500 fill-current mr-1" />
-                        <span className="font-semibold text-teal-900">{review.rating}/10</span>
-                      </div>
-                    )}
-                  </div>
-
-                  <p className="text-gray-700 leading-relaxed">{review.publicReview}</p>
-
-                  {review.categories && review.categories.length > 0 && (
-                    <div className="mt-4 flex flex-wrap gap-2">
-                      {review.categories.map((cat, idx) => (
-                        <span
-                          key={idx}
-                          className="text-xs bg-gray-100 text-gray-700 px-3 py-1 rounded-full"
-                        >
-                          {cat.category.replace(/_/g, ' ')}: {cat.rating}/10
-                        </span>
-                      ))}
-                    </div>
-                  )}
-                </div>
+                <ReviewCard
+                  key={review.id}
+                  review={review}
+                  variant="card"
+                />
               ))}
             </div>
           )}
         </div>
+
+        {/* Multi-property Navigation */}
+        {otherPropertyIds.length > 0 && (
+          <div className="mt-6 bg-blue-50 border border-blue-200 rounded-lg p-4">
+            <div className="flex items-start">
+              <AlertCircle className="w-5 h-5 text-blue-600 mr-2 flex-shrink-0 mt-0.5" />
+              <div className="flex-1">
+                <p className="text-sm text-blue-900 font-medium">
+                  You have selected reviews from {otherPropertyIds.length + 1} properties.
+                </p>
+                <p className="text-sm text-blue-700 mt-1">
+                  Currently viewing: <span className="font-semibold">{property?.name}</span>
+                </p>
+                <div className="mt-3 flex flex-wrap gap-2">
+                  {otherPropertyIds.map((propId, index) => (
+                    <Link
+                      key={propId}
+                      href={`/property/${propId}`}
+                      className="inline-flex items-center px-3 py-1 rounded-md bg-blue-100 text-blue-700 hover:bg-blue-200 text-sm font-medium transition-colors"
+                    >
+                      View Next Property
+                      <ChevronRight className="w-4 h-4 ml-1" />
+                    </Link>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
 
         {/* Flex Living Call to Action */}
         <div className="mt-8 bg-teal-900 text-white rounded-lg p-8 text-center">

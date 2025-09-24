@@ -447,7 +447,7 @@
       "id": 7479,
       "type": "guest-to-host",
       "status": "published",
-      "rating": 3,
+      "rating": 4,
       "publicReview": "Cute cottage but a bit cold inside, heating could be improved.",
       "reviewCategory": [
         { "category": "cleanliness", "rating": 8 },
@@ -524,7 +524,7 @@
       "submittedAt": "2024-03-28 14:00:00",
       "guestName": "Amelia Turner",
       "listingName": "1B Luxury Flat - Chelsea",
-      "channel": "Airbnb"
+      "channel": "Booking.com"
     },
     {
       "id": 7484,
@@ -588,7 +588,7 @@
       "submittedAt": "2024-04-01 09:00:00",
       "guestName": "Sophia Green",
       "listingName": "1B Urban Loft - Soho",
-      "channel": "Airbnb"
+      "channel": "VRBO"
     }
   ]
 }

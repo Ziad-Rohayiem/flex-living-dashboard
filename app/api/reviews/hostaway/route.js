@@ -8,6 +8,7 @@
 
 
 import mockData from '@/app/data/mockReviews.json';
+import { generatePropertyId } from '@/app/utils/propertyHelpers';
 
 export async function GET(request) {
   const normalizedReviews = mockData.result.map(review => ({
@@ -20,10 +21,11 @@ export async function GET(request) {
     submittedAt: review.submittedAt,
     guestName: review.guestName,
     listingName: review.listingName,
+    propertyId: generatePropertyId(review.listingName), // ADD THIS LINE
     channel: review.channel || 'Unknown',
     isSelected: false
   }));
-
+  
   return Response.json({
     status: 'success',
     result: normalizedReviews

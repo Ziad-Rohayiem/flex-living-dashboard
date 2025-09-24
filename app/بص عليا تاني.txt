@@ -1,0 +1,4 @@
+1- i need further discussion:
+the idea is that it's not only about selection and redirection to the property page through the display selected button. but, think as the business owner -> of course i will need at any time the property page is opened (through the display selected button or any other way) we need to find the property details and reviews on it in the property layout.(i mean this is a permenant selection -> when the manager who open the dashboard select certain reviews, this selection should stay always as the manager didn't change it even if we left the dashboard page to any other page, these selection should stay the same (saved)
+
+2- عايزين نتأكد من الريفيوز اللي في ال جسون و الافردج بتاعها و كدا
