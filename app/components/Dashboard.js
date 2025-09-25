@@ -2,10 +2,11 @@
 'use client'
 import React from 'react'
 import { useState, useEffect } from 'react'
-import { Calendar, Star, Filter, TrendingUp, Home, AlertCircle, ChevronDown, Search } from 'lucide-react'
+import { Calendar, Star, Filter, Home, AlertCircle, Search, ChevronDown, ChevronRight } from 'lucide-react'
 import { useRouter } from 'next/navigation'
 import ReviewCard from './ReviewCard'
 import { generatePropertyId, getPropertyFromReviews } from '@/app/utils/propertyHelpers'
+import Link from 'next/link'
 
 export default function Dashboard() {
   const [reviews, setReviews] = useState([])
@@ -23,13 +24,23 @@ export default function Dashboard() {
 
   // state for property grouping
   const [groupByProperty, setGroupByProperty] = useState(false)
-  // const [properties, setProperties] = useState([])
-  // const [propertyMap, setPropertyMap] = useState({})
 
   // Search and expand states
   const [propertySearch, setPropertySearch] = useState('')
   const [showAllProperties, setShowAllProperties] = useState(false)
   const [showAllIssues, setShowAllIssues] = useState(false)
+
+  // published reviews ids state
+  const [publishedReviewIds, setPublishedReviewIds] = useState([])
+
+  // Check if user is authorized
+  useEffect(() => {
+    const userRole = localStorage.getItem('userRole')
+    if (userRole !== 'manager') {
+      alert('Access denied. Please login as manager.')
+      router.push('/properties')
+    }
+  }, [router])
 
   useEffect(() => {
     fetchReviews()
@@ -38,6 +49,55 @@ export default function Dashboard() {
   useEffect(() => {
     applyFiltersAndSort()
   }, [reviews, propertyFilter, ratingFilter, channelFilter, dateFilter, sortBy])
+
+  // Load previously selected reviews on mount
+  useEffect(() => {
+    const savedSelections = localStorage.getItem('permanentReviewSelections')
+    if (savedSelections) {
+      setSelectedReviews(JSON.parse(savedSelections))
+    }
+  }, [])
+
+  // Save selections whenever they change
+  useEffect(() => {
+    if (selectedReviews.length > 0) {
+      localStorage.setItem('permanentReviewSelections', JSON.stringify(selectedReviews))
+    }
+  }, [selectedReviews])
+
+  // Load previously published reviews and mark them as selected
+  useEffect(() => {
+    const publishedReviews = localStorage.getItem('publishedReviews')
+    if (publishedReviews && reviews.length > 0) {
+      const reviewsByProperty = JSON.parse(publishedReviews)
+      const allPublishedIds = []
+      
+      Object.values(reviewsByProperty).forEach(propertyReviews => {
+        propertyReviews.forEach(review => {
+          allPublishedIds.push(review.id)
+        })
+      })
+      
+      setSelectedReviews(allPublishedIds)
+    }
+  }, [reviews]) // Run when reviews are loaded
+
+  // Load published reviews on mount
+  useEffect(() => {
+    const publishedReviews = localStorage.getItem('publishedReviews')
+    if (publishedReviews) {
+      const reviewsByProperty = JSON.parse(publishedReviews)
+      const allPublishedIds = []
+      
+      Object.values(reviewsByProperty).forEach(propertyReviews => {
+        propertyReviews.forEach(review => {
+          allPublishedIds.push(review.id)
+        })
+      })
+      
+      setPublishedReviewIds(allPublishedIds)
+    }
+  }, [])
 
   const fetchReviews = async () => {
     try {
@@ -145,7 +205,7 @@ export default function Dashboard() {
 
   const getRecurringIssues = () => {
     // Analyze low-rated reviews for common keywords
-    const lowRated = reviews.filter(r => r.rating && r.rating < 7)
+    const lowRated = reviews.filter(r => r.rating && r.rating < 5)
     const keywords = {}
     
     lowRated.forEach(review => {
@@ -166,29 +226,85 @@ export default function Dashboard() {
   }
 
   const handleDisplaySelected = () => {
-    const selectedReviewsData = reviews.filter(r => selectedReviews.includes(r.id))
-    
-    if (selectedReviewsData.length === 0) return
-    
-    // Group selected reviews by property
-    const propertyGroups = getPropertyFromReviews(selectedReviewsData)
-    const propertyIds = Object.keys(propertyGroups)
-    
-    if (propertyIds.length === 1) {
-      // Single property - direct redirect
-      localStorage.setItem('selectedReviews', JSON.stringify(selectedReviewsData))
-      router.push(`/property/${propertyIds[0]}`)
-    } else {
-      // Multiple properties - store all and redirect to first
-      localStorage.setItem('selectedReviews', JSON.stringify(selectedReviewsData))
-      localStorage.setItem('multiPropertySelection', JSON.stringify(propertyIds))
+    try {
+      const selectedReviewsData = reviews.filter(r => selectedReviews.includes(r.id))
       
-      const firstProperty = propertyGroups[propertyIds[0]]
-      if (confirm(`You've selected reviews from ${propertyIds.length} properties. View "${firstProperty.name}" first?`)) {
-        router.push(`/property/${propertyIds[0]}`)
+      if (selectedReviewsData.length === 0) {
+        alert('No reviews selected to publish.')
+        return
+      }
+      
+      // Group reviews by property
+      const reviewsByProperty = {}
+      selectedReviewsData.forEach(review => {
+        const propId = generatePropertyId(review.listingName)
+        if (!reviewsByProperty[propId]) {
+          reviewsByProperty[propId] = []
+        }
+        reviewsByProperty[propId].push(review)
+      })
+      
+      // Save published reviews to localStorage
+      localStorage.setItem('publishedReviews', JSON.stringify(reviewsByProperty))
+
+      // Update the published IDs state for immediate UI update
+      const newPublishedIds = selectedReviewsData.map(r => r.id)
+      setPublishedReviewIds(prev => {
+        // Combine existing published IDs with newly published ones
+        const combined = [...new Set([...prev, ...newPublishedIds])]
+        return combined
+      })
+      
+      // Get property names for the success message
+      const propertyNames = [...new Set(selectedReviewsData.map(r => r.listingName))]
+      
+      // Show success message
+      if (propertyNames.length === 1) {
+        alert(`✅ Successfully published ${selectedReviewsData.length} review${selectedReviewsData.length > 1 ? 's' : ''} for "${propertyNames[0]}"`)
+      } else {
+        alert(`✅ Successfully published ${selectedReviewsData.length} reviews across ${propertyNames.length} properties:\n\n${propertyNames.join('\n')}`)
+      }
+      
+      // Optional: Update the UI to show reviews as published without page refresh
+      // You could add a state update here if you want to show the status change immediately
+      
+    } catch (error) {
+      // Show error message
+      console.error('Error publishing reviews:', error)
+      alert('❌ Failed to publish reviews. Please try again.')
+    }
+  }
+
+  const handleClearAllSelections = () => {
+    if (confirm('This will clear all selections AND unpublish ALL published reviews. Are you sure?')) {
+      try {
+        // Clear all selections
+        setSelectedReviews([])
+        
+        // Clear all published reviews from localStorage
+        localStorage.removeItem('publishedReviews')
+        
+        // Clear published IDs state
+        setPublishedReviewIds([])
+        
+        // Show success message
+        alert('✅ All selections cleared and all reviews unpublished.')
+        
+      } catch (error) {
+        console.error('Error clearing selections:', error)
+        alert('❌ Failed to clear selections. Please try again.')
       }
     }
   }
+
+  // "Clear All Selections" button with confirmation
+  // const handleClearAllSelections = () => {
+  //   if (confirm('This will remove all published reviews from all properties. Are you sure?')) {
+  //     setSelectedReviews([])
+  //     localStorage.removeItem('permanentReviewSelections')
+  //     localStorage.removeItem('publishedReviews')
+  //   }
+  // }
 
   const properties = [...new Set(reviews.map(r => r.listingName))]
   const channels = [...new Set(reviews.map(r => r.channel))]
@@ -206,6 +322,20 @@ export default function Dashboard() {
           <p className="text-teal-100 mt-2">Manage and analyze your property reviews</p>
         </div>
       </div>
+
+      {/* Link to view guest properties page - to be removed!!!! */}
+      {/* <div className="max-w-7xl mx-auto px-4 -mt-4 mb-6">
+        <Link 
+          href="/properties" 
+          className="inline-flex items-center text-teal-200 hover:text-white transition-colors"
+        >
+          <ChevronRight className="w-4 h-4 mr-1 rotate-180" />
+          View Guest Properties Page
+        </Link>
+      </div> */}
+
+      {/* <div className="p-6 max-w-7xl mx-auto">
+      </div> */}
 
       <div className="p-6 max-w-7xl mx-auto">
         {/* Filters Section */}
@@ -471,6 +601,7 @@ export default function Dashboard() {
                   <th className="px-6 py-3 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">Date</th>
                   <th className="px-6 py-3 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">Channel</th>
                   <th className="px-6 py-3 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">Type</th>
+                  <th className="px-6 py-3 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">Status</th>
                   <th className="px-6 py-3 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">Review</th>
                 </tr>
               </thead>
@@ -503,6 +634,7 @@ export default function Dashboard() {
                             variant="table"
                             showCheckbox={true}
                             isSelected={selectedReviews.includes(review.id)}
+                            isPublished={publishedReviewIds.includes(review.id)}
                             onSelect={toggleReviewSelection}
                           />
                         ))}
@@ -523,8 +655,8 @@ export default function Dashboard() {
                   )
                 ) : (
                   <tr>
-                    <td colSpan="8" className="px-6 py-12 text-center text-gray-500">
-                      No reviews match your filters.
+                    <td colSpan="9" className="px-6 py-12 text-center text-gray-500">
+                        No reviews match your filters.
                     </td>
                   </tr>
                 )}
@@ -539,7 +671,7 @@ export default function Dashboard() {
             {selectedReviews.length > 0 && (
               <button
               onClick={() => {
-                setSelectedReviews([])
+                handleClearAllSelections([])
                 localStorage.removeItem('multiPropertySelection')
               }}
               className="text-teal-600 hover:text-teal-700 underline"
@@ -553,7 +685,7 @@ export default function Dashboard() {
             className="bg-teal-600 text-white px-6 py-3 rounded-lg hover:bg-teal-700 disabled:bg-gray-400 disabled:cursor-not-allowed transition-colors font-medium"
             disabled={selectedReviews.length === 0}
           >
-            Display Selected Reviews ({selectedReviews.length})
+            Publish Selected Reviews ({selectedReviews.length})
           </button>
         </div>
       </div>

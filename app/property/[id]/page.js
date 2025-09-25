@@ -27,65 +27,57 @@ export default function PropertyPage() {
   // Load property data based on the ID
   useEffect(() => {
     if (propertyId) {
-      // Try to find by ID first, then generate a mock property
+      // Always try to load from mockProperties first
       const found = mockProperties.find(p => p.id === Number(propertyId))
       if (found) {
         setProperty(found)
       } else {
-        // Create a property object for reviews without mock data
-        const storedReviews = localStorage.getItem('selectedReviews')
-        if (storedReviews) {
-          const reviews = JSON.parse(storedReviews)
-          const propertyReview = reviews.find(r => generatePropertyId(r.listingName) == propertyId)
-          if (propertyReview) {
-            setProperty({
-              id: propertyId,
-              name: propertyReview.listingName,
-              tagline: "Premium Flex Living Property",
-              price: 200,
-              guests: 4,
-              rating: 9.0,
-              type: "Apartment",
-              location: "London, United Kingdom",
-              description: "A premium Flex Living property offering exceptional comfort and service.",
-              amenities: ["Free Wi-Fi", "Smart TV", "Fully equipped kitchen", "24/7 support"]
-            })
-          }
-        }
+        // If not found, still show a basic property page
+        setProperty({
+          id: parseInt(propertyId),
+          name: "Property Details",
+          tagline: "Premium Flex Living Property",
+          price: 200,
+          guests: 4,
+          rating: 0,
+          type: "Property",
+          location: "London, United Kingdom",
+          description: "Property information is being updated.",
+          amenities: ["Contact us for details"],
+          heroImage: "/placeholder.svg?height=800&width=1200"
+        })
       }
     }
   }, [propertyId])
 
   // Load the reviews that were selected in the dashboard
   useEffect(() => {
-    const stored = localStorage.getItem('selectedReviews')
-    if (stored) {
-      const allReviews = JSON.parse(stored)
+    // Always try to load published reviews, but don't fail if none exist
+    const publishedReviews = localStorage.getItem('publishedReviews')
+    
+    if (publishedReviews && propertyId) {
+      const reviewsByProperty = JSON.parse(publishedReviews)
       
-      // Filter reviews for this property AND only show guest-to-host reviews
-      const thisPropertyReviews = allReviews.filter(review => 
-        generatePropertyId(review.listingName) == propertyId && 
+      // Try multiple ID formats to find reviews
+      let propertyReviews = reviewsByProperty[propertyId] || []
+      
+      // If no reviews found by ID, try by property name
+      if (propertyReviews.length === 0 && property?.name) {
+        const generatedId = generatePropertyId(property.name)
+        propertyReviews = reviewsByProperty[generatedId] || []
+      }
+      
+      // Filter for guest-to-host reviews only
+      const guestReviews = propertyReviews.filter(review => 
         review.type === 'guest-to-host'
       )
-
-      setSelectedReviews(thisPropertyReviews)
       
-      // Check for multi-property selection
-      const multiProperty = localStorage.getItem('multiPropertySelection')
-      if (multiProperty) {
-        const allPropertyIds = JSON.parse(multiProperty)
-        // Only show multi-property navigation if there are actually multiple properties
-        const actualPropertyIds = [...new Set(allReviews.map(r => generatePropertyId(r.listingName).toString()))]
-        if (actualPropertyIds.length > 1) {
-          setOtherPropertyIds(allPropertyIds.filter(id => id != propertyId))
-        } else {
-          // Clear the multi-property flag if there's only one property
-          localStorage.removeItem('multiPropertySelection')
-          setOtherPropertyIds([])
-        }
-      }
+      setSelectedReviews(guestReviews)
+    } else {
+      // No published reviews yet - that's OK
+      setSelectedReviews([])
     }
-  }, [propertyId])
+  }, [propertyId, property?.name])
 
   useEffect(() => {
     // Cleanup on unmount
@@ -126,8 +118,8 @@ export default function PropertyPage() {
       {/* Header (same as dashboard) */}
       <div className="bg-teal-900 text-white p-4 md:p-6">
         <div className="max-w-7xl mx-auto px-4 md:px-0">
-          <Link href="/" className="text-teal-200 hover:text-white mb-4 inline-block">
-            ← Back to Dashboard
+          <Link href="/properties" className="text-teal-200 hover:text-white mb-4 inline-block">
+            ← Back to Properties
           </Link>
           <h1 className="text-3xl font-bold">{property.name}</h1>
           <p className="text-teal-100 mt-2">{property.tagline}</p>

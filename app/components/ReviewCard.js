@@ -1,4 +1,6 @@
 import { Star, Calendar, User } from 'lucide-react'
+import Link from 'next/link'
+import { generatePropertyId } from '@/app/utils/propertyHelpers'
 
 export default function ReviewCard({ review, variant = 'table', showCheckbox = false, isSelected = false, onSelect }) {
   // Table row variant for Dashboard
@@ -19,9 +21,13 @@ export default function ReviewCard({ review, variant = 'table', showCheckbox = f
           {review.guestName}
         </td>
         <td className="px-6 py-4 text-sm text-gray-700">
-          <div className="max-w-xs truncate" title={review.listingName}>
+          <Link 
+            href={`/property/${review.propertyId || generatePropertyId(review.listingName)}`}
+            className="max-w-xs truncate block hover:text-teal-600 hover:underline transition-colors"
+            title={review.listingName}
+          >
             {review.listingName}
-          </div>
+          </Link>
         </td>
         <td className="px-6 py-4 whitespace-nowrap text-sm">
           <div className="flex items-center">
@@ -49,6 +55,17 @@ export default function ReviewCard({ review, variant = 'table', showCheckbox = f
           }`}>
             {review.type}
           </span>
+        </td>
+        <td className="px-6 py-4 whitespace-nowrap text-sm">
+          {isSelected ? (
+            <span className="px-2 py-1 text-xs font-semibold rounded-full bg-green-100 text-green-800">
+              Published
+            </span>
+          ) : (
+            <span className="px-2 py-1 text-xs font-semibold rounded-full bg-gray-100 text-gray-600">
+              Unpublished
+            </span>
+          )}
         </td>
         <td className="px-6 py-4 text-sm text-gray-700">
           <div className="max-w-xs truncate" title={review.publicReview}>

@@ -1,4 +1,186 @@
-1- i need further discussion:
-the idea is that it's not only about selection and redirection to the property page through the display selected button. but, think as the business owner -> of course i will need at any time the property page is opened (through the display selected button or any other way) we need to find the property details and reviews on it in the property layout.(i mean this is a permenant selection -> when the manager who open the dashboard select certain reviews, this selection should stay always as the manager didn't change it even if we left the dashboard page to any other page, these selection should stay the same (saved)
 
 2- عايزين نتأكد من الريفيوز اللي في ال جسون و الافردج بتاعها و كدا
+
+[
+  {
+    "id": 3950935338,
+    "name": "2B N1 A - 29 Shoreditch Heights",
+    "tagline": "Modern apartment in trendy Shoreditch",
+    "heroImage": "/placeholder.svg?height=800&width=1200",
+    "price": 180,
+    "guests": 4,
+    "rating": 9.0,
+    "type": "Apartment",
+    "location": "London, United Kingdom",
+    "description": "A stylish apartment in the heart of Shoreditch, perfect for exploring East London's vibrant culture.",
+    "amenities": [
+      "Free Wi-Fi",
+      "Smart TV",
+      "Fully equipped kitchen",
+      "Washer/Dryer",
+      "Workspace",
+      "24/7 support"
+    ]
+  },
+  {
+    "id": 749752089,
+    "name": "1B Studio - Canary Wharf Tower",
+    "tagline": "Luxury studio with stunning views",
+    "heroImage": "/placeholder.svg?height=800&width=1200",
+    "price": 220,
+    "guests": 2,
+    "rating": 9.5,
+    "type": "Studio",
+    "location": "London, United Kingdom",
+    "description": "A luxurious studio apartment in Canary Wharf with breathtaking city views.",
+    "amenities": [
+      "Free Wi-Fi",
+      "Smart TV",
+      "Gym access",
+      "Concierge service",
+      "Kitchen",
+      "Air conditioning"
+    ]
+  },
+  {
+    "id": 1395718078,
+    "name": "3B Penthouse - London Bridge",
+    "tagline": "Spectacular penthouse near iconic landmarks",
+    "heroImage": "/placeholder.svg?height=800&width=1200",
+    "price": 350,
+    "guests": 6,
+    "rating": 9.8,
+    "type": "Penthouse",
+    "location": "London, United Kingdom",
+    "description": "An extraordinary penthouse with panoramic views of London Bridge and the Thames.",
+    "amenities": [
+      "Free Wi-Fi",
+      "Smart TV",
+      "Full kitchen",
+      "Private terrace",
+      "Washer/Dryer",
+      "24/7 support"
+    ]
+  },
+  {
+    "id": 542078410,
+    "name": "2B Riverside Flat - Tower Bridge",
+    "tagline": "Stunning riverside views near the iconic Tower Bridge",
+    "heroImage": "/placeholder.svg?height=800&width=1200",
+    "price": 250,
+    "guests": 4,
+    "rating": 3.3,
+    "type": "Flat",
+    "location": "London, United Kingdom",
+    "description": "A beautiful riverside flat with spectacular views of the Thames and Tower Bridge. Perfect for couples or small families.",
+    "amenities": [
+      "Free Wi-Fi",
+      "Smart TV",
+      "Fully equipped kitchen",
+      "River view balcony",
+      "Washer/Dryer",
+      "24/7 support"
+    ]
+  },
+  {
+    "id": 3848166039,
+    "name": "1B Modern Loft - King's Cross",
+    "tagline": "Trendy loft in the heart of King's Cross",
+    "heroImage": "/placeholder.svg?height=800&width=1200",
+    "price": 190,
+    "guests": 2,
+    "rating": 3.5,
+    "type": "Loft",
+    "location": "London, United Kingdom",
+    "description": "A modern loft apartment in the vibrant King's Cross area, close to major transport links and attractions.",
+    "amenities": [
+      "Free Wi-Fi",
+      "Smart TV",
+      "Open plan kitchen",
+      "Workspace",
+      "Air conditioning",
+      "24/7 support"
+    ]
+  },
+  {
+    "id": 2675901962,
+    "name": "2B Cozy Cottage - Hampstead",
+    "tagline": "Charming cottage in leafy Hampstead",
+    "heroImage": "/placeholder.svg?height=800&width=1200",
+    "price": 280,
+    "guests": 4,
+    "rating": 8.0,
+    "type": "Cottage",
+    "location": "London, United Kingdom",
+    "description": "A delightful cottage in the peaceful Hampstead area, perfect for a quiet retreat while staying close to London.",
+    "amenities": [
+      "Free Wi-Fi",
+      "Smart TV",
+      "Full kitchen",
+      "Private garden",
+      "Fireplace",
+      "Parking space"
+    ]
+  },
+  {
+    "id": 3719895474,
+    "name": "2B City Apartment - Oxford Circus",
+    "tagline": "Central London apartment near shopping district",
+    "heroImage": "/placeholder.svg?height=800&width=1200",
+    "price": 270,
+    "guests": 4,
+    "rating": 3.1,
+    "type": "Apartment",
+    "location": "London, United Kingdom",
+    "description": "A modern apartment in the heart of London's shopping district, walking distance to Oxford Street and Soho.",
+    "amenities": [
+      "Free Wi-Fi",
+      "Smart TV",
+      "Fully equipped kitchen",
+      "Washer/Dryer",
+      "Central location",
+      "24/7 support"
+    ]
+  },
+  {
+    "id": 2097853618,
+    "name": "1B Luxury Flat - Chelsea",
+    "tagline": "Upscale flat in prestigious Chelsea",
+    "heroImage": "/placeholder.svg?height=800&width=1200",
+    "price": 320,
+    "guests": 2,
+    "rating": 5.7,
+    "type": "Flat",
+    "location": "London, United Kingdom",
+    "description": "A luxurious flat in one of London's most exclusive neighborhoods, featuring high-end finishes and amenities.",
+    "amenities": [
+      "Free Wi-Fi",
+      "Smart TV",
+      "Designer kitchen",
+      "Luxury bathroom",
+      "Private terrace",
+      "Concierge service"
+    ]
+  },
+  {
+    "id": 3427103695,
+    "name": "1B Urban Loft - Soho",
+    "tagline": "Stylish loft in vibrant Soho",
+    "heroImage": "/placeholder.svg?height=800&width=1200",
+    "price": 240,
+    "guests": 2,
+    "rating": 9.0,
+    "type": "Loft",
+    "location": "London, United Kingdom",
+    "description": "A trendy urban loft in the heart of Soho, surrounded by restaurants, theaters, and nightlife.",
+    "amenities": [
+      "Free Wi-Fi",
+      "Smart TV",
+      "Open plan living",
+      "Modern kitchen",
+      "Air conditioning",
+      "Elevator access"
+    ]
+  }
+]
+
