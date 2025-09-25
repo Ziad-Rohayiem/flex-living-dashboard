@@ -285,7 +285,7 @@ No environment variables required for demo.
 
 ---
 
-**Project developed by**: [Ziad Rohayiem ft. The Great Performer: Claude Opus 4 (free version)]
-**Date**: [25/09/2025]
+**Project developed by**: Ziad Rohayiem ft. The Great Performer: Claude Opus 4
+**Date**: 25/09/2025
 **Version**: 1.0.0
 ```
