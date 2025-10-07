@@ -5,8 +5,7 @@ import { useState, useEffect } from 'react'
 import { Calendar, Star, Filter, Home, AlertCircle, Search, ChevronDown, ChevronRight } from 'lucide-react'
 import { useRouter } from 'next/navigation'
 import ReviewCard from './ReviewCard'
-import { generatePropertyId, getPropertyFromReviews } from '@/app/utils/propertyHelpers'
-import Link from 'next/link'
+import { generatePropertyId } from '@/app/utils/propertyHelpers'
 
 export default function Dashboard() {
   const [reviews, setReviews] = useState([])

@@ -9,21 +9,3 @@ export function generatePropertyId(propertyName) {
     return Math.abs(hash);
   }
   
-  export function getPropertyFromReviews(reviews) {
-    // Group reviews by property
-    const propertyMap = {};
-    
-    reviews.forEach(review => {
-      const propertyId = review.propertyId || generatePropertyId(review.listingName);
-      if (!propertyMap[propertyId]) {
-        propertyMap[propertyId] = {
-          id: propertyId,
-          name: review.listingName,
-          reviews: []
-        };
-      }
-      propertyMap[propertyId].reviews.push(review);
-    });
-    
-    return propertyMap;
-  }
