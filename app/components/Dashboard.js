@@ -264,9 +264,7 @@ export default function Dashboard() {
       } else {
         alert(`✅ Successfully published ${selectedReviewsData.length} reviews across ${propertyNames.length} properties:\n\n${propertyNames.join('\n')}`)
       }
-      
-      // Optional: Update the UI to show reviews as published without page refresh
-      // You could add a state update here if you want to show the status change immediately
+    
       
     } catch (error) {
       // Show error message
