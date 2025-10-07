@@ -278,12 +278,13 @@ export default function Dashboard() {
       try {
         // Clear all selections
         setSelectedReviews([])
+
+        // Clear published IDs state
+        setPublishedReviewIds([])
         
         // Clear all published reviews from localStorage
         localStorage.removeItem('publishedReviews')
-        
-        // Clear published IDs state
-        setPublishedReviewIds([])
+        localStorage.removeItem('permanentReviewSelections')
         
         // Show success message
         alert('✅ All selections cleared and all reviews unpublished.')
