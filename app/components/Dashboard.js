@@ -170,12 +170,6 @@ export default function Dashboard() {
     )
   }
 
-  // const getAverageRating = (reviewsList = filteredReviews) => {
-  //   const rated = reviewsList.filter(r => r.rating)
-  //   if (rated.length === 0) return 0
-  //   return (rated.reduce((sum, r) => sum + r.rating, 0) / rated.length).toFixed(1)
-  // }
-
   const getAverageRating = (reviewsList = filteredReviews) => {
     const rated = reviewsList.filter(r => r.rating)
     if (rated.length === 0) return 0
@@ -296,15 +290,6 @@ export default function Dashboard() {
     }
   }
 
-  // "Clear All Selections" button with confirmation
-  // const handleClearAllSelections = () => {
-  //   if (confirm('This will remove all published reviews from all properties. Are you sure?')) {
-  //     setSelectedReviews([])
-  //     localStorage.removeItem('permanentReviewSelections')
-  //     localStorage.removeItem('publishedReviews')
-  //   }
-  // }
-
   const properties = [...new Set(reviews.map(r => r.listingName))]
   const channels = [...new Set(reviews.map(r => r.channel))]
 
@@ -321,20 +306,6 @@ export default function Dashboard() {
           <p className="text-teal-100 mt-2">Manage and analyze your property reviews</p>
         </div>
       </div>
-
-      {/* Link to view guest properties page - to be removed!!!! */}
-      {/* <div className="max-w-7xl mx-auto px-4 -mt-4 mb-6">
-        <Link 
-          href="/properties" 
-          className="inline-flex items-center text-teal-200 hover:text-white transition-colors"
-        >
-          <ChevronRight className="w-4 h-4 mr-1 rotate-180" />
-          View Guest Properties Page
-        </Link>
-      </div> */}
-
-      {/* <div className="p-6 max-w-7xl mx-auto">
-      </div> */}
 
       <div className="p-6 max-w-7xl mx-auto">
         {/* Filters Section */}
